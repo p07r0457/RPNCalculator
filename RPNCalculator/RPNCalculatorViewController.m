@@ -60,16 +60,9 @@
 }
 
 
-- (void)addEventToHistory:(NSString *)event
+- (void)updateHistory
 {
-    if (!event) return;
-    
-    if ([self.history.text isEqualToString:@"0"])
-        self.history.text = @"";
-    
-    [self displayMayNotReflectResult];
-
-    self.history.text = [NSString stringWithFormat:@"%@ %@", self.history.text, event];
+    self.history.text = [[RPNCalculatorEngine descriptionOfProgram:self.engine.program] stringByAppendingString:@" ="];
 }
 
 
@@ -106,14 +99,14 @@
         [self enterPressed];
     
     self.display.text = [NSString stringWithFormat:@"%g", [self.engine performOperation:sender.currentTitle]];
-    [self addEventToHistory:[sender.currentTitle stringByAppendingString:@" ="]];
+    [self updateHistory];
 }
 
 
 - (IBAction)enterPressed
 {
     [self.engine pushOperand:[self.display.text doubleValue]];
-    [self addEventToHistory:self.display.text];
+    [self updateHistory];
     
     self.userIsEnteringNumbers = NO;
 }
